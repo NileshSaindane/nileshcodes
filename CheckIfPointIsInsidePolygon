@@ -1,0 +1,94 @@
+#include<iostream>
+using namespace std;
+
+class Polygon
+{
+public:
+	struct Point {
+		int x, y;
+	}pt;
+
+	struct Line {
+		Point Point1, Point2;
+	}ln;
+
+	bool IsPointInsidePolygon(Point iPolygon[],Point iPPoint);
+	bool IsPointOnLine(Line iLine,Point iPoint);
+	bool IsLineIntersecting(Line ilnPolygonLine, Line ilnPointLine);
+	int  PointDirection(Point a, Point b, Point c);
+	
+};
+
+bool Polygon::IsPointOnLine(Line iLine, Point iPoint) 
+{        //check whether p is on the line or not
+   if(iPoint.x <= max(iLine.Point1.x, iLine.Point2.x) && iPoint.x <= min(iLine.Point1.x, iLine.Point2.x) &&
+      (iPoint.y <= max(iLine.Point1.y, iLine.Point2.y) && iPoint.y <= min(iLine.Point1.y, iLine.Point2.y)))
+         return true;
+
+   return false;
+}
+
+int Polygon::PointDirection(Point a, Point b, Point c) 
+{
+	int PointValue = (b.y-a.y)*(c.x-b.x)-(b.x-a.x)*(c.y-b.y);
+	if (PointValue == 0)
+		return 0;           
+	else if(PointValue < 0)
+		return 2;
+	else
+		return 1;
+}
+
+bool Polygon::IsLineIntersecting(Line ilnPolygonLine, Line ilnPointLine) 
+{
+	int dir1 = PointDirection(ilnPolygonLine.Point1, ilnPolygonLine.Point2, ilnPointLine.Point1);
+	int dir2 = PointDirection(ilnPolygonLine.Point1, ilnPolygonLine.Point2, ilnPointLine.Point2);
+	int dir3 = PointDirection(ilnPointLine.Point1, ilnPointLine.Point2, ilnPolygonLine.Point1);
+	int dir4 = PointDirection(ilnPointLine.Point1, ilnPointLine.Point2, ilnPolygonLine.Point2);
+
+	if(dir1 != dir2 && dir3 != dir4)
+		return true;           //they are intersecting
+	if(dir1==0 && IsPointOnLine(ilnPolygonLine, ilnPointLine.Point1))        //when p2 of line2 are on the line1
+		return true;
+	if(dir2==0 && IsPointOnLine(ilnPolygonLine, ilnPointLine.Point2))         //when p1 of line2 are on the line1
+		return true;
+	if(dir3==0 && IsPointOnLine(ilnPointLine, ilnPolygonLine.Point1))       //when p2 of line1 are on the line2
+		return true;
+	if(dir4==0 && IsPointOnLine(ilnPointLine, ilnPolygonLine.Point2)) //when p1 of line1 are on the line2
+		return true;
+	return false;
+}
+
+bool Polygon::IsPointInsidePolygon(Point iPolygon[],Point iPPoint)
+{
+	int Count=0,i=0;
+	int nPolyNumber = sizeof(iPolygon)/sizeof(int);
+	if(nPolyNumber < 3)
+		return false;
+	Line lnPPointLine = {iPPoint,{1000,iPPoint.y}};
+
+	do
+	{
+		Line lnPolygonside = {iPolygon[i], iPolygon[(i+1)%nPolyNumber]};     //forming a line from two consecutive points of poly
+		if(IsLineIntersecting(lnPolygonside, lnPPointLine)) {          //if side is intersects exline
+			if(PointDirection(lnPolygonside.Point1, iPPoint, lnPolygonside.Point2) == 0)
+				return IsPointOnLine(lnPolygonside, iPPoint);
+			Count++;
+		}while (i != 0);
+		i = (i+1)%nPolyNumber;
+	} while (true);
+}
+
+int main()
+{
+	Polygon P1;
+	
+	Polygon::Point Polygon[] = {{1,0},{8,3},{8,8},{1,5}};
+	Polygon::Point PPoint = {3,5};
+
+	if(P1.IsPointInsidePolygon(Polygon,PPoint))
+		cout << "Point is Inside Polygon.";
+	else
+		cout << "Point is Outside Polygon.";
+
+}
