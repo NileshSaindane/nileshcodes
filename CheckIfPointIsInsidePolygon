@@ -77,7 +77,11 @@ bool Polygon::IsPointInsidePolygon(Point iPolygon[],Point iPPoint,int inPolyNumb
 		}
 		i = (i+1) % inPolyNumber;
 	}while (i != 0);
-	return Count&1;
+
+	if(Count%2 != 0)
+		cout << "True";
+	else
+		cout << "False";
 }
 
 int main()
@@ -88,19 +92,14 @@ int main()
 	Polygon::Point PPoint1 = {3,5};
 	int Polygon1Size = 4;
 
-	if(P1.IsPointInsidePolygon(Polygon1,PPoint1,Polygon1Size))
-		cout << "True";
-	else
-		cout << "False";
+	P1.IsPointInsidePolygon(Polygon1,PPoint1,Polygon1Size);
 
 	Polygon::Point Polygon2[] = {{-3,2}, {-2,-0.8}, {0,1.2}, {2.2,0}, {2,4.5}};
 	Polygon::Point PPoint2 = {0,0};
 	int Polygon2Size = 5;
 
-	if(P1.IsPointInsidePolygon(Polygon2,PPoint2,Polygon2Size))
-		cout << "True";
-	else
-		cout << "False";
-
+	P1.IsPointInsidePolygon(Polygon2,PPoint2,Polygon2Size);
+	
 }
+
 
