@@ -1,0 +1,32 @@
+#include <iostream>
+using namespace std;
+
+struct  Point
+{
+	float x,y;
+};
+
+float CalculateLength(Point a,Point b,Point c)
+{
+	float Length = abs((b.y-a.y))+abs((c.x-a.x));
+	return Length;
+}
+
+void  CalculateSurface(Point iBuilding[],Point iSource,int iNNumberOfBuidlings)
+{
+	int i = 0;
+	float SurfaceExposed =  CalculateLength(iBuilding[i],iBuilding[i+1],iBuilding[i+3]);
+	cout<<"Surface Exposed is = "<<SurfaceExposed<<endl;
+}
+
+
+int main()
+{
+	Point BuildingPoints[] = {{4,0},{4,-5},{7,-5},{7,0}};
+	Point Source = {1,1};
+	int nNumberOfBuildings = 1;
+
+	CalculateSurface(BuildingPoints,Source,nNumberOfBuildings);
+
+}
+
